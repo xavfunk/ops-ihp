@@ -55,6 +55,8 @@ from psychopy import core, data, gui, logging, sound, visual, event
 from psychopy.hardware import keyboard
 from psychopy import prefs
 import pygame
+import sys
+
 pygame.mixer.init()
 
 
@@ -83,7 +85,7 @@ CONDITIONS = None
 
 
 # (command_text, path_to_audio_file) — cycles if count < N_TRIALS_PER_BLOCK
-LANGUAGE = 'dutch'
+LANGUAGE = 'english'
 if LANGUAGE == 'english':
     COMMANDS = [
     ("thumb knuckle",   "audio/thumb_knuckle.mp3"),
@@ -131,7 +133,7 @@ N_REPEATS_PER_BLOCK = 1
 N_TRIALS_PER_BLOCK = N_REPEATS_PER_BLOCK * len(COMMANDS)
 
 # ── Paths ────────────────────────────────────────────────────
-DATA_DIR = "data"
+DATA_DIR = "data" if sys.platform == 'linux' else "C:\\ExperimentData\\ops-ihp\\data"
 
 # ── Camera ───────────────────────────────────────────────────
 # webcam: Camera: 640×480
@@ -180,7 +182,25 @@ EXP_INSTR = {
     ),
 }
 
-task_instructions="placeholder"
+
+if LANGUAGE == 'dutch':
+    task_instructions="""
+    placeholder
+    
+    """
+
+elif LANGUAGE == 'english':
+    task_instructions="""
+    - you will sit in front of the NAME with your hand hidden by a white plate
+    - on every trial, you will hear an audio instruction containing a landmark 
+    - these include both a finger (index, middle, ring, pinky, thumb) and a finger location (base knuckle or tip)
+    - move the metal stick to point at the exact location the white plate below which you think that landmark is
+    - take your time to be as precise as possible in your estimations, avoid rapid movements, judge only one landmark at a time and avoid strategies such as outlineing your hand
+    - before each block and after the experiment, we will take a reference photo of your hand without the occluder
+    """
+
+else:
+    raise NotImplementedError("No other languages are implemented.")
 
 # ══════════════════════════════════════════════════════════════
 
@@ -792,9 +812,12 @@ visual.TextStim(
         f"Experiment :  {EXP_NAME}  (v{EXP_VER})\n"
         f"Participant:  {PID}   —   Session {SES}\n\n"
         f"{len(blocks)} block(s)   ·   {_n_trials_total} trial(s) total\n\n"
-        "Calibration runs before each block and once at the end.\n\n"
-        "Press  [ESCAPE]  at any time to quit and save data.\n\n"
-        "Press  [SPACE]  to begin."
+        "Press  [SPACE]  to take a picture on each trial\n" 
+        "Press  [SPACE]  to accept a picture during review\n"
+        "Press  [R]  to repeat audio instructions or retake the picture\n"
+        "You will be prompted for calibration before each block and once at the end.\n\n"
+        "Press  [SPACE]  for participant instructions.\n\n"
+        "Should you have to quit the task, press  [ESCAPE]  ."
     ),
     height=24, color=(0.8, 0.8, 0.8),
     wrapWidth=WIN_SIZE[0] - 100,
@@ -809,9 +832,9 @@ visual.TextStim(
         "Please remind the participant about the task instructions and make sure they understand:\n\n"
         f"{task_instructions}.\n\n"
         "Press  [ESCAPE]  at any time to quit and save data.\n\n"
-        "Press  [SPACE]  to move to the first calibration block."
+        "Press  [SPACE]  to move to the first calibration block"
     ),
-    height=24, color=(0.8, 0.8, 0.8),
+    height=24, color=(0.8, 0.8, 0.8), alignText = 'left',
     wrapWidth=WIN_SIZE[0] - 100,
 ).draw()
 win.flip()
@@ -879,3 +902,4 @@ event.clearEvents()
 event.waitKeys(keyList=["space"])
 
 quit_exp()
+sys.exit()

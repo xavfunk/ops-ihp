@@ -1,0 +1,1 @@
+C:\Windows\System32\cmd.exe /K c:\ProgramData\Anaconda3\Scripts\activate.bat psychopy && cd c:\ExperimentData\ops-ihp && python experiment.py
