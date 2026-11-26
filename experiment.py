@@ -83,7 +83,7 @@ CONDITIONS = None
 
 
 # (command_text, path_to_audio_file) — cycles if count < N_TRIALS_PER_BLOCK
-LANGUAGE = 'english'
+LANGUAGE = 'dutch'
 if LANGUAGE == 'english':
     COMMANDS = [
     ("thumb knuckle",   "audio/thumb_knuckle.mp3"),
@@ -126,8 +126,8 @@ elif LANGUAGE == 'dutch':
 else:
     raise NotImplementedError("No other languages are implemented.")
 
-N_BLOCKS           = 3
-N_REPEATS_PER_BLOCK = 3
+N_BLOCKS           = 2
+N_REPEATS_PER_BLOCK = 1
 N_TRIALS_PER_BLOCK = N_REPEATS_PER_BLOCK * len(COMMANDS)
 
 # ── Paths ────────────────────────────────────────────────────
@@ -135,14 +135,14 @@ DATA_DIR = "data"
 
 # ── Camera ───────────────────────────────────────────────────
 # webcam: Camera: 640×480
-CAMERA_INDEX  = 4        # 0 = default webcam
+CAMERA_INDEX  = 0        # 0 = default webcam
 CAMERA_WIDTH  = 640#1280
 CAMERA_HEIGHT = 480#720
-BRIGHTENER = .5
+BRIGHTENER = 0.5
 
 # ── Window ───────────────────────────────────────────────────
 WIN_SIZE   = (1280, 720)
-FULLSCREEN = False
+FULLSCREEN = True
 
 # ── Layout (pixels, origin = window centre) ──────────────────
 #
@@ -389,7 +389,7 @@ ui_header = visual.TextStim(
 # "COMMAND" / "CALIBRATION" section label
 ui_section_label = visual.TextStim(
     win, text="COMMAND",
-    pos=(INFO_X, 213), height=17,
+    pos=(INFO_X, 213), height=40,#17,
     color=(0.55, 0.55, 0.55),
     wrapWidth=460, alignText="center",
 )
@@ -592,7 +592,8 @@ def draw_ui(
         ui_command.text = command.upper()
         ui_command.draw()
     else:
-        ui_section_label.color = (0.45, 0.65, 0.95)   # blue tint for calibration
+        ui_section_label.color = (1.0, 0.85, 0.1) # yellow
+        #ui_section_label.color = (0.45, 0.65, 0.95)   # blue tint for calibration
         ui_section_label.text  = "CALIBRATION"
         ui_section_label.draw()
         # Reset for next call
@@ -866,8 +867,8 @@ visual.TextStim(
     win,
     text=(
         "Experiment complete.\n\n"
-        f"Trial data  →  {data_stem}_trials.csv\n"
-        f"Images      →  {DATA_DIR}/pictures/\n\n"
+        f"Trial data  →  {DATA_DIR} / sub-{PID} / ses-{SES} / {data_stem}_trials.csv\n"
+        f"Images      →  {DATA_DIR} / sub-{PID} / ses-{SES} / pictures/\n\n"
         "Press  [SPACE]  to exit."
     ),
     height=24, color=(0.8, 0.8, 0.8),
